@@ -1,6 +1,7 @@
 package server
 
 import (
+	"net/http"
 	"time"
 
 	"github.com/gin-contrib/cors"
@@ -12,7 +13,10 @@ type Server struct {
 	engine     *gin.Engine
 }
 
-func newServer() (*Server, error) {
+func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	s.engine.ServeHTTP(w, r)
+}
+func NewServer() (*Server, error) {
 	gin.SetMode("release")
 	engine := gin.New()
 	engine.Use(cors.New(cors.Config{

@@ -1,11 +1,13 @@
 package server
 
 import (
+	"errors"
 	"net/http"
 	"time"
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
+	users "github.com/lebleuciel/online-shop/internal/backend/user"
 )
 
 type Server struct {
@@ -16,7 +18,10 @@ type Server struct {
 func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	s.engine.ServeHTTP(w, r)
 }
-func NewServer() (*Server, error) {
+func NewServer(User *users.Users) (*Server, error) {
+	if User == nil {
+		return nil, errors.New("backend user module can not be nil")
+	}
 	gin.SetMode("release")
 	engine := gin.New()
 	engine.Use(cors.New(cors.Config{
@@ -27,6 +32,8 @@ func NewServer() (*Server, error) {
 		AllowCredentials: true,
 		MaxAge:           1 * time.Hour,
 	}))
+	v1 := engine.Group("/api")
+	User.RegisterRoutes(v1)
 	return &Server{
 		enviroment: "release",
 		engine:     engine,

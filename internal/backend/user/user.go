@@ -22,7 +22,9 @@ func (u *Users) RegisterRoutes(v1 *gin.RouterGroup) {
 }
 func (u *Users) getCurrentUser() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		ctx.JSON(200, "user data returned")
+		u.service.GetCurrentUser(ctx, false)
+		return
+		// ctx.JSON(200, "user data returned")
 	}
 }
 func NewUserModule(userService *userService.UserService, userRepo *userRepository.UserRepository, authEnabled bool) (*Users, error) {

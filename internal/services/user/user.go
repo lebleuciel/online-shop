@@ -3,6 +3,7 @@ package user
 import (
 	"errors"
 
+	"github.com/gin-gonic/gin"
 	repository "github.com/lebleuciel/online-shop/internal/repository/user"
 )
 
@@ -17,4 +18,7 @@ func NewUserService(repo *repository.UserRepository) (*UserService, error) {
 	return &UserService{
 		repository: repo,
 	}, nil
+}
+func (u *UserService) GetCurrentUser(c *gin.Context, isAdmin bool) {
+	c.JSON(200, "user data returned")
 }
